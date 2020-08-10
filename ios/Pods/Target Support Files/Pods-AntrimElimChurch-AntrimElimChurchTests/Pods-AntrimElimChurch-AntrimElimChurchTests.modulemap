@@ -1,0 +1,6 @@
+module Pods_AntrimElimChurch_AntrimElimChurchTests {
+  umbrella header "Pods-AntrimElimChurch-AntrimElimChurchTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

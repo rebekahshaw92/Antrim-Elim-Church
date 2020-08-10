@@ -1,0 +1,44 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '10.0'
+ require_relative '../node_modules/react-native/scripts/react_native_pods'
+ require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+target 'AntrimElimChurch' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for AntrimElimChurch
+
+  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
+
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
+  target 'AntrimElimChurch-tvOSTests' do
+    inherit! :search_paths
+    # Pods for testing
+    pod 'RNCMaskedView', :path => '../node_modules/@react-native-community/masked-view'
+
+  end
+
+  target 'AntrimElimChurchTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+
+target 'AntrimElimChurch-tvOS' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for AntrimElimChurch-tvOS
+end
+
+target 'OneSignalNotificationServiceExtension' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+  
+  # Pods for OneSignalNotificationServiceExtension
+  pod 'OneSignal', '>= 2.9.3', '< 3.0'
+
+end
