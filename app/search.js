@@ -35,7 +35,7 @@ export default class SearchScreen extends React.Component {
 
       componentDidMount(){
       const fetch = require('node-fetch');
-      return fetch('http://ff45578b1a2f.ngrok.io/sermons.php')
+      return fetch('http://468711895c00.ngrok.io/sermons.php')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({

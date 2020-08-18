@@ -43,7 +43,7 @@ export default class MainScreen extends React.Component
   }
   componentDidMount(){
     const fetch = require('node-fetch');
-    fetch('http://ff45578b1a2f.ngrok.io/FilterCat.php', {
+    fetch('http://468711895c00.ngrok.io/FilterCat.php', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',

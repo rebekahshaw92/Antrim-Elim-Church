@@ -1,64 +1,96 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import PushNotification from "react-native-push-notification";
+import { AsyncStorage } from 'react-native';
+import firebase from 'react-native-firebase';
 
-export const APNContext: React.Context<any> = React.createContext({
-    configure: () => { }
+export default class Notification extends React.Component {
+  async componentDidMount() {
+    this.checkPremission();
+    this.createNotificationListeners();
+  }
+
+  //Remove listeners allocated in createNotificationsListeners()
+
+  componentWillUnmount() {
+    this.notificationListener();
+    this.notificationOpenedListener();
+  }
+
+  async createNotificationListeners() {
+    /*
+    * Triggered when a particular notification has been received in foreground
+    * */
+   this.notificationListener = firebase.notifications().onNotification((notifications) => {
+    const { title, body} = notifications;
+    this.showAlert(title, body);
   });
-  
-  export const useApn = () => React.useContext(APNContext);
-  
-  export const APNManagerWrapped = (props: any) => {
-  
-    const configure = () => {
-      PushNotification.configure({
-        onRegister: function (tokenData) {
-          const { token } = tokenData;
-          const fetch = require('node-fetch');
-          fetch('/apn/save', {
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify({
-              token: props.authToken,
-              deviceToken: token,
-            })
-          })
-            .catch(e => {
-            });
-        },
-        onNotification: function (notification) {
-          notification.finish(PushNotificationIOS.FetchResult.NoData);
-        },
-        permissions: {
-          alert: true,
-          badge: true,
-          sound: true
-        },
-        popInitialNotification: true,
-        requestPermissions: true
-      });
-    }
-  
-    return (
-      <APNContext.Provider value={{
-        configure: configure,
-      }}>
-        {props.children}
-      </APNContext.Provider>
+
+  /* 
+  * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+  * */
+  this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+    const { title, body} = notificationOpen.notification;
+    this.showAlert(title, body);
+  });
+
+  /*
+  * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows: 
+  * */
+ const notificationOpen = await firebase.notifications().getInitialNotification();
+ if (notificationOpen) {
+   const { title, body } = notificationOpen.notification;
+   this.showAlert(title, body);
+ }
+
+ /*
+ * Triggered for data only payload in foreground 
+ * */
+this.messageListener = firebase.messaging().onMessage((message) => {
+  //process data message
+  console.log(JSON.stringify(message));
+});
+  }
+
+  showAlert(title, body) {
+    Alert.alert(
+      title, body,
+      [
+        { text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      { cancelable: false },
     );
   }
-  
-  const mapStateToProps = (state: any, ownProps: any) => ({
-    authToken: state.account.authToken,
-  });
-  
-  export const APNManager = connect(
-    mapStateToProps,
-    null,
-  )(APNManagerWrapped);
-  
-  export default APNManager;
+
+  //1
+  async checkPremission() {
+    const enabled = await firebase.messaging().hasPermission();
+      if (enabled) {
+          this.getToken();
+      } else {
+        this.requestPermission();
+      }
+  }
+
+  //3 
+  async getToken() {
+    let fcmToken = await AsyncStorage.getItem('fcmToken');
+    if (!fcmToken) {
+        fcmToken = await firebase.messaging().getToken();
+        if (fcmToken) {
+          // user has a device token
+          await AsyncStorage.getItem('fcmToken', fcmToken);
+        }
+    }
+  }
+
+  //2
+  async requestPermission() {
+    try {
+      await firebase.messaging().requestPermission();
+      // User has authorised
+      this.getToken();
+    } catch (errpr) {
+      // User has rejected permissions
+      console.log('permission rejected');
+    }
+  }
+}

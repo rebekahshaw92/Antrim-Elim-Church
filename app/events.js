@@ -40,7 +40,7 @@ export default class EventScreen extends React.Component {
   }
   webCall= () => {
     const fetch = require('node-fetch');
-       fetch('http://ff45578b1a2f.ngrok.io/events.php', {
+       fetch('http://468711895c00.ngrok.io/events.php', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

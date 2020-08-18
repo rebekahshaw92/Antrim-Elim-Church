@@ -48,7 +48,7 @@ export default class SecondActivity extends React.Component
 
   componentDidMount(){
 const fetch = require('node-fetch');
-  fetch('http://ff45578b1a2f.ngrok.io/Filter.php', {
+  fetch('http://468711895c00.ngrok.io/Filter.php', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

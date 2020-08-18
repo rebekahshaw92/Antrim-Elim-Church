@@ -4,6 +4,12 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+@import UIKit;
+@import Firebase;
+
+#import <Firebase.h>
+
+
 #import "RNNotifications.h"
 
 #if DEBUG
@@ -30,6 +36,13 @@ static void InitializeFlipper(UIApplication *application) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [RNNotifications startMonitorNotifications];
+  
+  [FIRApp configure];
+  
+  if ([FIRApp defaultApp] == nil) {
+    [FIRApp configure];
+  }
+  
 #if DEBUG
   InitializeFlipper(application);
 #endif

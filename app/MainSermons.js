@@ -41,7 +41,7 @@ export default class MainSermonsScreen extends React.Component {
   }
   webCall= () => {
     const fetch = require('node-fetch');
-       fetch('http://ff45578b1a2f.ngrok.io/category.php', {
+       fetch('http://468711895c00.ngrok.io/category.php', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

@@ -31,6 +31,9 @@ import MemberScreen from './member';
 import PrayerRequestsScreen from './prayerrequests';
 import SettingsScreen from './settings';
 
+import { initialRoute } from './Notifications';
+import Notifications from "./Notifications.1";
+
 export const HomeStack = createStackNavigator({
   Home:
   {
@@ -116,8 +119,7 @@ PrayerRequests: {
 },
       Settings: {
         screen: SettingsScreen
-      }
-    
+      },
 });
 
 export const SettingsStack = createStackNavigator({ 
